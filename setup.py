@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="aws",  # Package name
+    name="aws_utils",  # Package name
     version="0.1.0",    # Initial version
     author="Peter van Elsacker",
     author_email="petervanelsacker@gmail.com",
@@ -9,7 +9,7 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/peer3737/aws",
-    packages=find_packages(),  # Automatically find subpackages
+    packages=["aws_utils"],  # Automatically find subpackages
     install_requires=[
         # List dependencies, e.g., "requests", "numpy>=1.20.0"
     ],
