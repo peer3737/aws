@@ -1,4 +1,11 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+
+
+def parse_requirements(filename):
+    """Load requirements from a pip requirements file."""
+    with open(filename, 'r') as f:
+        return [line.strip() for line in f if line.strip() and not line.startswith('#')]
+
 
 setup(
     name="aws_utils",  # Package name
@@ -10,9 +17,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/peer3737/aws",
     packages=["aws_utils"],  # Automatically find subpackages
-    install_requires=[
-        "boto3==1.35.63"
-    ],
+    install_requires=parse_requirements("requirements.txt"),
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent"
