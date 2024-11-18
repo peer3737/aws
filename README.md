@@ -1,1 +1,1 @@
-# aws
+This is the package to use boto3 in a simple way.
