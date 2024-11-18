@@ -11,7 +11,7 @@ setup(
     url="https://github.com/peer3737/aws",
     packages=["aws_utils"],  # Automatically find subpackages
     install_requires=[
-        # List dependencies, e.g., "requests", "numpy>=1.20.0"
+        "boto3==1.35.63"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
