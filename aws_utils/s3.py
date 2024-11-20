@@ -1,5 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
+from handlers import general
 
 
 class S3:
@@ -17,27 +18,8 @@ class S3:
                  Otherwise - status_code = 500 with content = Error information
         """
 
-        return_response = {
-            'status_code': '',
-            'content': ''
-        }
+        return general.handle_action(self.s3.get_object(Bucket=bucket_name, Key=key_name))
 
-        try:
-            response = self.s3.get_object(
-                Bucket=bucket_name,
-                Key=key_name
-            )
-
-            return_response['status_code'] = response['ResponseMetadata']['HTTPStatusCode']
-            return_response['content'] = response
-        except ClientError as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-        except Exception as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-
-        return return_response
 
     def create(self, bucket_name, key_name, file_path, metadata=None):
 
@@ -86,26 +68,7 @@ class S3:
                  Otherwise - status_code = 500 with content = Error information
         """
 
-        return_response = {
-            'status_code': '',
-            'content': ''
-        }
-
-        try:
-            response = self.s3.list_objects_v2(
-                Bucket=bucket_name
-            )
-
-            return_response['status_code'] = response['ResponseMetadata']['HTTPStatusCode']
-            return_response['content'] = response
-        except ClientError as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-        except Exception as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-
-        return return_response
+        return general.handle_action(self.s3.list_objects_v2(Bucket=bucket_name))
 
     def key_exists(self, bucket_name, key_name):
         try:
@@ -123,24 +86,4 @@ class S3:
                  Otherwise - status_code = 500 with content = Error information
         """
 
-        return_response = {
-            'status_code': '',
-            'content': ''
-        }
-
-        try:
-            response = self.s3.delete_object(
-                Bucket=bucket_name,
-                Key=key_name
-            )
-
-            return_response['status_code'] = response['ResponseMetadata']['HTTPStatusCode']
-            return_response['content'] = response
-        except ClientError as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-        except Exception as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-
-        return return_response
+        return general.handle_action(self.s3.delete_object(Bucket=bucket_name, Key=key_name))
