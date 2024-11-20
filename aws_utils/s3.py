@@ -87,3 +87,18 @@ class S3:
         """
 
         return general.handle_action(self.s3.delete_object(Bucket=bucket_name, Key=key_name))
+
+
+    def put(self, bucket_name, key_name, payload, content_type):
+        """
+
+        :param bucket_name:
+        :param key_name:
+        :param payload:
+        :param content_type:
+        :return:
+        """
+
+        return general.handle_action(self.s3.put_object(Bucket=bucket_name, Key=key_name, Body=payload, ContentType=content_type))
+
+
