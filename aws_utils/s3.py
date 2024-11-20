@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
-from handlers import general
+from aws_utils import general
 
 
 class S3:

@@ -1,6 +1,6 @@
 import boto3
 import json
-from handlers import general
+from aws_utils import general
 
 
 class Lambda:
