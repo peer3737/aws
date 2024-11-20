@@ -1,6 +1,6 @@
 import boto3
 import json
-from botocore.exceptions import ClientError
+from handlers import general
 
 
 class Lambda:
@@ -16,26 +16,9 @@ class Lambda:
         :return:
         """
 
-        return_response = {
-            'status_code': '',
-            'content': ''
-        }
-
-        try:
-            response = self.connection.get_function(
+        return general.handle_action(self.connection.get_function(
                 FunctionName=arn
-            )
-
-            return_response['status_code'] = response['ResponseMetadata']['HTTPStatusCode']
-            return_response['content'] = response
-        except ClientError as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-        except Exception as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-
-        return return_response
+            ))
 
     def create(self, name, runtime, s3_bucket, s3_key, handler, role, timeout=180, publish=True, description=''):
         """
@@ -51,36 +34,20 @@ class Lambda:
         :param description: Description of the function (optional)
         :return:
         """
-        return_response = {
-            'status_code': '',
-            'content': ''
-        }
 
-        try:
-            response = self.connection.create_function(
-                Code={
-                    'S3Bucket': s3_bucket,
-                    'S3Key': s3_key
-                },
-                Description=description,
-                FunctionName=name,
-                Handler=handler,
-                Publish=publish,
-                Role=role,
-                Timeout=timeout,
-                Runtime=runtime
-            )
-
-            return_response['status_code'] = response['ResponseMetadata']['HTTPStatusCode']
-            return_response['content'] = response
-        except ClientError as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-        except Exception as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-
-        return return_response
+        return general.handle_action(self.connection.create_function(
+            Code={
+                'S3Bucket': s3_bucket,
+                'S3Key': s3_key
+            },
+            Description=description,
+            FunctionName=name,
+            Handler=handler,
+            Publish=publish,
+            Role=role,
+            Timeout=timeout,
+            Runtime=runtime
+        ))
 
     def execute(self, arn, payload=None, sync=False):
         if sync:
@@ -88,26 +55,20 @@ class Lambda:
         else:
             event_type = 'Event'
 
-        return_response = {
-            'status_code': '',
-            'content': ''
-        }
+        # Invoke the Lambda function
+        return general.handle_action(self.connection.invoke(
+            FunctionName=arn,
+            InvocationType=event_type,  # 'RequestResponse' (sync) or 'Event' (async)
+            Payload=json.dumps(payload)
+        ))
 
-        try:
-            # Invoke the Lambda function
-            response = self.connection.invoke(
-                FunctionName=arn,
-                InvocationType=event_type,  # 'RequestResponse' (sync) or 'Event' (async)
-                Payload=json.dumps(payload)
-            )
+    def delete(self, arn):
 
-            return_response['status_code'] = response['ResponseMetadata']['HTTPStatusCode']
-            return_response['content'] = response
-        except ClientError as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
-        except Exception as e:
-            return_response['status_code'] = 500
-            return_response['content'] = e
+        """
+        :param arn:
+        :return:
+        """
 
-        return return_response
+        return general.handle_action(self.connection.delete_function(
+                FunctionName=arn
+            ))
